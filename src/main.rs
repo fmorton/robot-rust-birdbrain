@@ -1,26 +1,26 @@
 use std::error::Error;
 
-struct Response2 {
+struct Response {
     body: String,
     status: u16,
 }
 
-impl Response2 {
-    fn response(uri: &str) -> Response2 {
+impl Response {
+    fn response(uri: &str) -> Response {
         println!("{:?} {}", {}, uri);
-        let response2 = reqwest::blocking::get("http://127.0.0.1:30061/hummingbird/in/orientation/Shake/A");
+        let response = reqwest::blocking::get("http://127.0.0.1:30061/hummingbird/in/orientation/Shake/A");
 
-        match response2 {
-            Ok(response2) => {
-                if response2.status().is_success() {
-                    let status = response2.status().as_u16();
+        match response {
+            Ok(response) => {
+                if response.status().is_success() {
+                    let status = response.status().as_u16();
 
-                    match response2.text() {
-                        Ok(text) => return Response2 { body: text, status: status },
+                    match response.text() {
+                        Ok(text) => return Response { body: text, status: status },
                         Err(e) => eprintln!("Error reading body: {}", e),
                     }
                 } else {
-                    eprintln!("API returned non-success status: {}", response2.status());
+                    eprintln!("API returned non-success status: {}", response.status());
                 }
             },
             Err(err) => {
@@ -28,15 +28,15 @@ impl Response2 {
             }
         }
 
-        Response2 { body: "".to_string(), status: 500 }
+        Response { body: "".to_string(), status: 500 }
     }
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let _another = Response2::response("http://127.0.0.1:30061/hummingbird/in/orientation/Shake/A");
+    let response = Response::response("http://127.0.0.1:30061/hummingbird/in/orientation/Shake/A");
 
-    println!("Status: {}", _another.status);
-    println!("Body: {}", _another.body);
+    println!("Status: {}", response.status);
+    println!("Body: {}", response.body);
 
     Ok(())
 }
