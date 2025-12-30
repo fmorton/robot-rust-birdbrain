@@ -38,3 +38,33 @@ impl Request {
         return Request::response_from_uri(&uri)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    //use super::*;
+    use crate::Request;
+
+    #[test]
+    fn always_true() {
+        assert!(true)
+    }
+    #[test]
+    fn test_response_using_uri() {
+        let uri = Request::request_uri_from_vector(&vec!["hummingbird", "in", "orientation", "Shake", "A"]);
+
+        assert_eq!(uri, "http://127.0.0.1:30061/hummingbird/in/orientation/Shake/A");
+
+        let response_using_uri = Request::response_from_uri(&uri);
+
+        assert_eq!(response_using_uri.status, 200);
+        assert_eq!(response_using_uri.body, "false");
+    }
+
+    #[test]
+    fn test_response(){
+        let response = Request::response(&vec!["hummingbird", "in", "orientation", "Shake", "A"]);
+
+        assert_eq!(response.status, 200);
+        assert_eq!(response.body, "false");
+    }
+}
