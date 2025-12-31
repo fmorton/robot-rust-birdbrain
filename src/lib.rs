@@ -10,13 +10,3 @@ use std::error::Error;
 use crate::request::Request;
 //use crate::device::new;
 //use crate::device::connected;
-
-fn main() -> Result<(), Box<dyn Error>> {
-    //let device = Device::new("A");
-    //let connected = device.is_connected();
-    //println!("{:?} {}", {}, connected);
-
-    //let microbit = Microbit::new("A");
-
-    Ok(())
-}
