@@ -9,13 +9,14 @@ impl Request {
     }
 
     fn response_from_uri(uri: &String) -> Request {
+        println!("{}", &uri);
         let response = reqwest::blocking::get(uri);
 
         match response {
             Ok(response) => {
                 if response.status().is_success() {
                     let status = response.status().as_u16();
-
+//println!("{}", response.text().to_string());  //DEBUG
                     match response.text() {
                         Ok(text) => return Request { body: text, status: status },
                         Err(e) => eprintln!("Error reading body: {}", e),

@@ -1,16 +1,8 @@
-//mod state;
+use crate::request::Request;
+use crate::state::State;
 
-pub struct Device {
-    pub state: u32,
-    pub device: char,
-    pub connected: bool,
-}
+pub fn connected(state: &mut State) -> bool {
+    let response = Request::response(&vec!["hummingbird", "in", "orientation", "Shake", &state.device.to_string()]);
 
-pub trait Device {
-    fn new(device: char) -> Device {
-        Device { device: device, state: 0, connected: false }
-    }
-    fn is_connected(&self) -> bool {
-        return self.connected
-    }
+    return response.body == "false"
 }
