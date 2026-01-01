@@ -16,7 +16,6 @@ impl Request {
             Ok(response) => {
                 if response.status().is_success() {
                     let status = response.status().as_u16();
-//println!("{}", response.text().to_string());  //DEBUG
                     match response.text() {
                         Ok(text) => return Request { body: text, status: status },
                         Err(e) => eprintln!("Error reading body: {}", e),
@@ -43,7 +42,8 @@ impl Request {
 #[cfg(test)]
 mod tests {
     //use super::*;
-    use crate::Request;
+    //use crate::Request;
+    use super::*;
 
     #[test]
     fn always_true() {
