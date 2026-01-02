@@ -7,7 +7,6 @@ pub struct State {
 
 impl State {
     pub fn new(device: char) -> State {
-        //pub fn new(device: char) -> State {
         State {
             device: device,
             connected: false,
@@ -24,7 +23,6 @@ impl State {
 #[cfg(test)]
 mod tests {
     use super::*;
-    //use crate::State;
 
     #[test]
     fn test_initial_display_map() {

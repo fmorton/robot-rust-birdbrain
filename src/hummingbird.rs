@@ -1,7 +1,5 @@
 use crate::device::connected;
-//use crate::microbit::microbit_is_shaking;
-//use crate::microbit::Microbit::is_shaking;
-//use crate::microbit::Microbit::*;
+use crate::microbit::microbit::microbit_is_shaking;
 use crate::state::State;
 
 pub struct Hummingbird {
@@ -18,8 +16,7 @@ impl Hummingbird {
     }
 
     pub fn is_shaking(&self) -> bool {
-        //microbit_is_shaking(&mut self.state)
-        true
+        microbit_is_shaking(&self.state)
     }
 }
 
@@ -40,5 +37,4 @@ mod tests {
 
         assert!(!hummingbird.is_shaking());
     }
-
 }

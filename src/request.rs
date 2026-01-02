@@ -9,7 +9,7 @@ impl Request {
     }
 
     fn response_from_uri(uri: &String) -> Request {
-        println!("{}", &uri);
+        println!("{}", &uri); //DEBUG
         let response = reqwest::blocking::get(uri);
 
         match response {
@@ -37,18 +37,16 @@ impl Request {
 
         return Request::response_from_uri(&uri)
     }
+
+    pub fn is_not_connected_response(response: &str) -> bool {
+        return response.to_lowercase() == "not connected"
+    }
 }
 
 #[cfg(test)]
 mod tests {
-    //use super::*;
-    //use crate::Request;
     use super::*;
 
-    #[test]
-    fn always_true() {
-        assert!(true)
-    }
     #[test]
     fn test_response_using_uri() {
         let uri = Request::request_uri_from_vector(&vec!["hummingbird", "in", "orientation", "Shake", "A"]);
@@ -67,5 +65,19 @@ mod tests {
 
         assert_eq!(response.status, 200);
         assert_eq!(response.body, "false");
+
+        assert!(!Request::is_not_connected_response(&response.body));
+    }
+
+    #[test]
+    fn test_is_not_connected_response(){
+        assert!(Request::is_not_connected_response("Not Connected"));
+        assert!(Request::is_not_connected_response("Not connected"));
+        assert!(Request::is_not_connected_response("not connected"));
+        assert!(!Request::is_not_connected_response("Something Else"));
+
+        let response = Request::response(&vec!["hummingbird", "in", "orientation", "Shake", "C"]);
+
+        assert!(Request::is_not_connected_response(&response.body));
     }
 }
