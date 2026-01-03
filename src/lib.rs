@@ -1,10 +1,10 @@
-mod request;
 mod device;
 mod state;
 mod hummingbird;
 mod finch;
 mod microbit;
 mod constant;
+mod request;
 //use crate::request::Request;
 //use crate::request;
 

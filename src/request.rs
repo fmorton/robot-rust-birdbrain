@@ -4,12 +4,15 @@ pub struct Request {
 }
 
 impl Request {
+    fn error_response() -> Request {
+        Request { body: "".to_string(), status: 500 }
+    }
+
     fn request_uri_from_vector(request: &[&str]) -> String {
         return "http://127.0.0.1:30061/".to_string() + &request.join("/")
     }
 
     fn response_from_uri(uri: &String) -> Request {
-        println!("{}", &uri); //DEBUG
         let response = reqwest::blocking::get(uri);
 
         match response {
@@ -18,24 +21,28 @@ impl Request {
                     let status = response.status().as_u16();
                     match response.text() {
                         Ok(text) => return Request { body: text, status: status },
-                        Err(e) => eprintln!("Error reading body: {}", e),
+                        Err(e) => return Request::error_response(),
                     }
                 } else {
-                    eprintln!("API returned non-success status: {}", response.status());
+                    return Request::error_response();
                 }
             },
             Err(err) => {
-                eprintln!("Request failed: {}", err);
+                panic!("Bluebird Connector Not Running");
             }
         }
-
-        Request { body: "".to_string(), status: 500 }
     }
 
     pub fn response(request: &[&str]) -> Request {
         let uri = Request::request_uri_from_vector(request).to_string();
 
-        return Request::response_from_uri(&uri)
+        let response = Request::response_from_uri(&uri);
+
+        if response.body.to_lowercase() == "not connected" {
+            panic!("Device Not Connected");
+        }
+
+        response
     }
 
     pub fn response_status(request: &[&str]) -> bool {
@@ -50,9 +57,6 @@ impl Request {
         if crate::constant::BIRDBRAIN_TEST {
             println!("Test: request status is {}", status)
         }
-
-        //if status is None:
-            //return None
 
         match status {
             "true" => return true,
@@ -75,7 +79,7 @@ impl Request {
             "invalid orientation" => return false,
             "invalid port" => return false,
 
-            _ => { panic!("unknown status"); }
+            _ => { panic!("Unknown Status: {}", status); }
         }
     }
 }
@@ -107,15 +111,17 @@ mod tests {
     }
 
     #[test]
+    #[should_panic]
+    fn test_response_no_device(){
+        let response = Request::response(&vec!["hummingbird", "in", "orientation", "Shake", "C"]);
+    }
+
+    #[test]
     fn test_is_not_connected_response(){
         assert!(Request::is_not_connected_response("Not Connected"));
         assert!(Request::is_not_connected_response("Not connected"));
         assert!(Request::is_not_connected_response("not connected"));
         assert!(!Request::is_not_connected_response("Something Else"));
-
-        let response = Request::response(&vec!["hummingbird", "in", "orientation", "Shake", "C"]);
-
-        assert!(Request::is_not_connected_response(&response.body));
     }
 
     #[test]
@@ -141,5 +147,17 @@ mod tests {
         assert!(!Request::request_status("not connected"));
         assert!(!Request::request_status("invalid orientation"));
         assert!(!Request::request_status("invalid port"));
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_request_status_should_panic_empty() {
+        assert!(!Request::request_status(""));
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_request_status_should_panic_nonsense() {
+        assert!(!Request::request_status("nonesense"));
     }
 }
