@@ -38,8 +38,45 @@ impl Request {
         return Request::response_from_uri(&uri)
     }
 
+    pub fn response_status(request: &[&str]) -> bool {
+        return Request::request_status(&Request::response(request).body);
+    }
+
     pub fn is_not_connected_response(response: &str) -> bool {
         return response.to_lowercase() == "not connected"
+    }
+
+    pub fn request_status(status: &str) -> bool {
+        if crate::constant::BIRDBRAIN_TEST {
+            println!("Test: request status is {}", status)
+        }
+
+        //if status is None:
+            //return None
+
+        match status {
+            "true" => return true,
+            "led set" => return true,
+            "triled set" => return true,
+            "servo set" => return true,
+            "buzzer set" => return true,
+            "symbol set" => return true,
+            "print set" => return true,
+            "all stopped" => return true,
+
+            "finch moved" => return true,
+            "finch turned" => return true,
+            "finch wheels started" => return true,
+            "finch wheels stopped" => return true,
+            "finch encoders reset" => return true,
+
+            "false" => return false,
+            "not connected" => return false,
+            "invalid orientation" => return false,
+            "invalid port" => return false,
+
+            _ => { panic!("unknown status"); }
+        }
     }
 }
 
@@ -79,5 +116,30 @@ mod tests {
         let response = Request::response(&vec!["hummingbird", "in", "orientation", "Shake", "C"]);
 
         assert!(Request::is_not_connected_response(&response.body));
+    }
+
+    #[test]
+    fn test_request_status() {
+        assert!(Request::request_status("true"));
+        assert!(Request::request_status("true"));
+        assert!(Request::request_status("true"));
+        assert!(Request::request_status("led set"));
+        assert!(Request::request_status("triled set"));
+        assert!(Request::request_status("servo set"));
+        assert!(Request::request_status("buzzer set"));
+        assert!(Request::request_status("symbol set"));
+        assert!(Request::request_status("print set"));
+        assert!(Request::request_status("all stopped"));
+
+        assert!(Request::request_status("finch moved"));
+        assert!(Request::request_status("finch turned"));
+        assert!(Request::request_status("finch wheels started"));
+        assert!(Request::request_status("finch wheels stopped"));
+        assert!(Request::request_status("finch encoders reset"));
+
+        assert!(!Request::request_status("false"));
+        assert!(!Request::request_status("not connected"));
+        assert!(!Request::request_status("invalid orientation"));
+        assert!(!Request::request_status("invalid port"));
     }
 }
