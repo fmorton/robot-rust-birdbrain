@@ -1,3 +1,4 @@
+use crate::constant;
 use crate::device::connected;
 use crate::microbit::microbit::microbit_is_shaking;
 use crate::request::Request;
@@ -27,6 +28,8 @@ impl Hummingbird {
     //return Request.response_status('hummingbird', 'out', 'led', port, calculated_intensity, device)
     
     pub fn led(&self, port: i32, intensity: i32) -> bool {
+        Request::validate_port(&port.to_string(), constant::VALID_LED_PORTS, false);
+
         return Request::response_status(
             &vec!["hummingbird", "out", "led", &port.to_string(), &intensity.to_string(), &self.state.device.to_string()]);
     }
@@ -58,5 +61,13 @@ mod tests {
             assert!(hummingbird.led(1, 80));
             assert!(hummingbird.led(1, 0));
         }
+    }
+
+    #[test]
+    #[should_panic(expected = "Invalid Port: 6")]
+    fn test_hummingbird_led_invalid_port() {
+        let hummingbird = Hummingbird::new('A');
+
+        assert!(hummingbird.led(6, 80));
     }
 }
