@@ -1,3 +1,5 @@
+use crate::constant;
+
 pub struct Request {
     pub body: String,
     pub status: u16,
@@ -39,7 +41,7 @@ impl Request {
         let response = Request::response_from_uri(&uri);
 
         if response.body.to_lowercase() == "not connected" {
-            panic!("Device Not Connected");
+            panic!("Device Not Connected: {}", Request::extracted_device(request));
         }
 
         response
@@ -82,6 +84,15 @@ impl Request {
             _ => { panic!("Unknown Status: {}", status); }
         }
     }
+
+    pub fn extracted_device(request: &[&str]) -> char {
+        for device in request.iter().rev() {
+            if constant::VALID_DEVICES.contains(device) {
+                return device.chars().nth(0).unwrap();
+            }
+        }
+        constant::UNKNOWN_DEVICE
+    }
 }
 
 #[cfg(test)]
@@ -111,7 +122,7 @@ mod tests {
     }
 
     #[test]
-    #[should_panic]
+    #[should_panic(expected = "Device Not Connected: C")]
     fn test_response_no_device(){
         let response = Request::response(&vec!["hummingbird", "in", "orientation", "Shake", "C"]);
     }
@@ -159,5 +170,13 @@ mod tests {
     #[should_panic]
     fn test_request_status_should_panic_nonsense() {
         assert!(!Request::request_status("nonesense"));
+    }
+
+    #[test]
+    fn test_extracted_device(){
+        assert!('A' == Request::extracted_device(&vec!["hummingbird", "in", "orientation", "Shake", "A"]));
+        assert!('A' == Request::extracted_device(&vec!["B", "in", "orientation", "Shake", "A"]));
+        assert!('C' == Request::extracted_device(&vec!["hummingbird", "C", "orientation", "Shake"]));
+        assert!(constant::UNKNOWN_DEVICE == Request::extracted_device(&vec!["hummingbird", "in", "orientation", "Shake"]));
     }
 }

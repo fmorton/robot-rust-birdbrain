@@ -25,6 +25,7 @@ pub const FINCH_ORIENTATION_IN_BETWEEN: &str = "In between";
 pub const FINCH_ORIENTATION_RESULTS: [&str; 7] = ["Beak up", "Beak down", "Tilt left", "Tilt right", "Level", "Upside down", "In between"];
 pub const RESET_ENCODERS_DELAY: f64 = 0.2;
 pub const RIGHT: &str = "R";
+pub const UNKNOWN_DEVICE: char = '?';
 pub const VALID_BEAK_PORTS: &str = "1";
 pub const VALID_BUTTONS: [&str; 3] = ["A", "B", "Logo"];
 pub const VALID_DEVICES: &str = "ABC";
