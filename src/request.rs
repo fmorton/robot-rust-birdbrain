@@ -161,13 +161,13 @@ mod tests {
     }
 
     #[test]
-    #[should_panic]
+    #[should_panic(expected = "Unknown Status: ")]
     fn test_request_status_should_panic_empty() {
         assert!(!Request::request_status(""));
     }
 
     #[test]
-    #[should_panic]
+    #[should_panic(expected = "Unknown Status: nonesense")]
     fn test_request_status_should_panic_nonsense() {
         assert!(!Request::request_status("nonesense"));
     }
