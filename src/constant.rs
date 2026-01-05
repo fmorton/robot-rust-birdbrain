@@ -2,7 +2,7 @@ pub const BIRDBRAIN_TEST: bool = false;
 
 pub const BACKWARD: &str = "B";
 pub const BEATS_TEMPO: i32 = 60;
-pub const BEATS_TEMPO_FACTOR: i32 = 1000;  // (60000 / TEMPO)
+pub const BEATS_TEMPO_FACTOR: i32 = 1000; // (60000 / TEMPO)
 pub const DEFAULT_DEGREES_MAX_RESPONSE: i32 = 359;
 pub const DEFAULT_DEGREES_MIN_RESPONSE: i32 = 0;
 pub const DEFAULT_DEVICE: &str = "A";
@@ -13,16 +13,45 @@ pub const DEFAULT_TYPE_METHOD: &str = "int";
 pub const DEFAULT_UNLIMITED_MAX_RESPONSE: i32 = 1000000;
 pub const DEFAULT_UNLIMITED_MIN_RESPONSE: i32 = -1000000;
 pub const FORWARD: &str = "F";
-pub const HUMMINGBIRD_ORIENTATIONS: [&str; 6] = ["Screen%20Up", "Screen%20Down", "Tilt%20Left", "Tilt%20Right", "Logo%20Up", "Logo%20Down"];
+pub const HUMMINGBIRD_ORIENTATIONS: [&str; 6] = [
+    "Screen%20Up",
+    "Screen%20Down",
+    "Tilt%20Left",
+    "Tilt%20Right",
+    "Logo%20Up",
+    "Logo%20Down",
+];
 pub const HUMMINGBIRD_ORIENTATION_IN_BETWEEN: &str = "In between";
-pub const HUMMINGBIRD_ORIENTATION_RESULTS: [&str; 6] = ["Screen up", "Screen down", "Tilt left", "Tilt right", "Logo up", "Logo down"];
+pub const HUMMINGBIRD_ORIENTATION_RESULTS: [&str; 6] = [
+    "Screen up",
+    "Screen down",
+    "Tilt left",
+    "Tilt right",
+    "Logo up",
+    "Logo down",
+];
 pub const LEFT: &str = "L";
 pub const MOVE_CHECK_MOVING_DELAY: f64 = 0.05;
 pub const MOVE_START_WAIT_SECONDS: f64 = 0.15;
 pub const MOVE_TIMEOUT_SECONDS: f64 = 60.0;
-pub const FINCH_ORIENTATIONS: [&str; 6] = ["Beak%20Up", "Beak%20Down", "Tilt%20Left", "Tilt%20Right", "Level", "Upside%20Down"];
+pub const FINCH_ORIENTATIONS: [&str; 6] = [
+    "Beak%20Up",
+    "Beak%20Down",
+    "Tilt%20Left",
+    "Tilt%20Right",
+    "Level",
+    "Upside%20Down",
+];
 pub const FINCH_ORIENTATION_IN_BETWEEN: &str = "In between";
-pub const FINCH_ORIENTATION_RESULTS: [&str; 7] = ["Beak up", "Beak down", "Tilt left", "Tilt right", "Level", "Upside down", "In between"];
+pub const FINCH_ORIENTATION_RESULTS: [&str; 7] = [
+    "Beak up",
+    "Beak down",
+    "Tilt left",
+    "Tilt right",
+    "Level",
+    "Upside down",
+    "In between",
+];
 pub const RESET_ENCODERS_DELAY: f64 = 0.2;
 pub const RIGHT: &str = "R";
 pub const UNKNOWN_DEVICE: char = '?';
@@ -41,11 +70,11 @@ pub const VOLTAGE_MAX: f64 = 3.3;
 pub const VOLTAGE_MIN: f64 = 0.0;
 
 pub const BATTERY_FACTOR: f64 = 0.0406;
-pub const DIAL_FACTOR: f64 = 0.43478260869;  // 100/230
-pub const DISTANCE_FACTOR: f64 = 1.0;  // 117/100 originally
-pub const LIGHT_FACTOR: f64 = 0.39215686274;  // 100/255
-pub const SOUND_FACTOR: f64 = 0.78431372549;  // 200/255
-pub const VOLTAGE_FACTOR: f64 = 0.01294117647;  // 3.3/255
+pub const DIAL_FACTOR: f64 = 0.43478260869; // 100/230
+pub const DISTANCE_FACTOR: f64 = 1.0; // 117/100 originally
+pub const LIGHT_FACTOR: f64 = 0.39215686274; // 100/255
+pub const SOUND_FACTOR: f64 = 0.78431372549; // 200/255
+pub const VOLTAGE_FACTOR: f64 = 0.01294117647; // 3.3/255
 
 pub const BLACK: [f64; 3] = [0.0, 0.0, 0.0];
 pub const BLUE: [f64; 3] = [0.0, 0.0, 100.0];

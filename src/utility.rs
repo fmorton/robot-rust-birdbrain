@@ -1,7 +1,10 @@
 use crate::constant;
 
 pub fn validate(validate: &str, validate_range: &str, validate_message: &str) -> bool {
-    if !validate_range.to_lowercase().contains(&validate.to_lowercase()) {
+    if !validate_range
+        .to_lowercase()
+        .contains(&validate.to_lowercase())
+    {
         panic!("{}", validate_message.to_string());
     }
 
@@ -13,7 +16,7 @@ pub fn validate_port(port: &str, valid_range: &str, allow_all: bool) -> bool {
         return true;
     }
 
-    let validate_message= format!("Invalid Port: {}", port);
+    let validate_message = format!("Invalid Port: {}", port);
 
     return self::validate(port, valid_range, &validate_message);
 }
@@ -78,24 +81,47 @@ pub fn calculate_left_or_right(direction: &str) -> &str {
 #[cfg(test)]
 #[test]
 fn test_validate() {
-    assert!(self::validate("A", constant::VALID_DEVICES, "Invalid Message"));
-    assert!(self::validate("1", constant::VALID_TAIL_PORTS, "Invalid Message"));
-    assert!(self::validate("all", constant::VALID_TAIL_PORTS, "Invalid Message"));
-    assert!(self::validate("All", constant::VALID_TAIL_PORTS, "Invalid Message"));
+    assert!(self::validate(
+        "A",
+        constant::VALID_DEVICES,
+        "Invalid Message"
+    ));
+    assert!(self::validate(
+        "1",
+        constant::VALID_TAIL_PORTS,
+        "Invalid Message"
+    ));
+    assert!(self::validate(
+        "all",
+        constant::VALID_TAIL_PORTS,
+        "Invalid Message"
+    ));
+    assert!(self::validate(
+        "All",
+        constant::VALID_TAIL_PORTS,
+        "Invalid Message"
+    ));
 
     assert!(self::validate_port("1", constant::VALID_TAIL_PORTS, true));
     assert!(self::validate_port("all", constant::VALID_TAIL_PORTS, true));
     assert!(self::validate_port("All", constant::VALID_TAIL_PORTS, true));
 
     let port = 1;
-    assert!(self::validate_port(&1.to_string(), constant::VALID_TAIL_PORTS, true));
-
+    assert!(self::validate_port(
+        &1.to_string(),
+        constant::VALID_TAIL_PORTS,
+        true
+    ));
 }
 
 #[test]
 #[should_panic(expected = "Invalid Message")]
 fn test_validate_panic() {
-    assert!(!self::validate("X", constant::VALID_DEVICES, "Invalid Message"));
+    assert!(!self::validate(
+        "X",
+        constant::VALID_DEVICES,
+        "Invalid Message"
+    ));
 }
 
 #[test]
@@ -107,7 +133,11 @@ fn test_validate_port_allow_all_panic() {
 #[test]
 #[should_panic(expected = "Invalid Port: J")]
 fn test_validate_port_panic() {
-    assert!(!self::validate_port("J", constant::VALID_SERVO_PORTS, false));
+    assert!(!self::validate_port(
+        "J",
+        constant::VALID_SERVO_PORTS,
+        false
+    ));
 }
 
 #[test]
@@ -141,14 +171,10 @@ fn test_decimal_bounds() {
 }
 
 #[test]
-fn test_calculate_angle() {
-
-}
+fn test_calculate_angle() {}
 
 #[test]
-fn test_calculate_intensity() {
-
-}
+fn test_calculate_intensity() {}
 
 #[test]
 fn test_calculate_speed() {

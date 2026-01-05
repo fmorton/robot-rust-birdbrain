@@ -11,12 +11,12 @@ impl State {
             device: device,
             connected: false,
             cache: 0,
-            display_map: State::microbit_empty_display_map()
+            display_map: State::microbit_empty_display_map(),
         }
     }
 
     fn microbit_empty_display_map() -> [bool; 25] {
-      [false; 25]
+        [false; 25]
     }
 }
 

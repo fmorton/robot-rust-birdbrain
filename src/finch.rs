@@ -6,7 +6,9 @@ pub struct Finch {
 
 impl Finch {
     fn new(device: char) -> Finch {
-        let finch = Finch { state: State::new(device) };
+        let finch = Finch {
+            state: State::new(device),
+        };
 
         finch
     }
