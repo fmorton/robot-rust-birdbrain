@@ -21,11 +21,11 @@ impl Hummingbird {
     pub fn is_shaking(&self) -> bool {
         microbit_is_shaking(&self.state)
     }
-    
+
     pub fn led(&self, port: i32, intensity: i32) -> bool {
         utility::validate_port(&port.to_string(), constant::VALID_LED_PORTS, false);
 
-        let calculated_intensity= utility::bounds(utility::calculate_intensity(intensity), 0, 255).to_string();
+        let calculated_intensity = utility::bounds(utility::calculate_intensity(intensity), 0, 255).to_string();
 
         return Request::response_status(
             &vec!["hummingbird", "out", "led", &port.to_string(), &calculated_intensity, &self.state.device.to_string()]);
