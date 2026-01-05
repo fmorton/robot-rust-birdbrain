@@ -178,5 +178,16 @@ mod tests {
         assert!('A' == Request::extracted_device(&vec!["B", "in", "orientation", "Shake", "A"]));
         assert!('C' == Request::extracted_device(&vec!["hummingbird", "C", "orientation", "Shake"]));
         assert!(constant::UNKNOWN_DEVICE == Request::extracted_device(&vec!["hummingbird", "in", "orientation", "Shake"]));
+
+        assert!(Request::extracted_device(&vec!["hummingbird", "in", "orientation", "Shake", "A"]) == 'A');
+        //assert!(Request::extracted_device(&vec![["hummingbird", "in", "orientation", "Shake", "A"]]) == 'A');
+        //assert!(Request::extracted_device(&vec![("hummingbird", "in", "orientation", "Shake", "A")]) == 'A');
+        //assert!(Request::extracted_device(&vec![[("hummingbird", "in", "orientation", "Shake", "A")]) == 'A');
+        //assert!(Request::extracted_device((&vec![["hummingbird", "in", "orientation", "Shake", "A"])) == 'A');
+
+        assert!(Request::extracted_device(&vec!["hummingbird", "out", "symbol", "C", "true/false/true/false"]) == 'C');
+        assert!(Request::extracted_device(&vec!["hummingbird", "out", "symbol", "C", "false/true/false/true"]) == 'C');
+
+        assert!(Request::extracted_device(&vec!["hummingbird", "out", "move", "B", "Forward", "7", "5"]) == 'B');
     }
 }
