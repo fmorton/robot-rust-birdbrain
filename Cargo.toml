@@ -11,7 +11,7 @@ rust-version = "1.92.0"
 [lib]
 name = "birdbrain"
 path = "src/lib.rs"
-test = "true"
+test = true
 crate-type = ["lib"]
 
 [dependencies]
