@@ -13,8 +13,14 @@ impl Request {
         }
     }
 
+    fn device_not_connected_panic(device: char) {
+        panic!("Device Not Connected: {}", device);
+    }
+
     fn request_uri_from_vector(request: &[&str]) -> String {
-        return "http://127.0.0.1:30061/".to_string() + &request.join("/");
+        let response = "http://127.0.0.1:30061/".to_string() + &request.join("/");
+
+        response
     }
 
     fn response_from_uri(uri: &String) -> Request {
@@ -26,6 +32,12 @@ impl Request {
                     let status = response.status().as_u16();
                     match response.text() {
                         Ok(text) => {
+                            if Request::is_not_connected_response(&text) {
+                                Request::device_not_connected_panic(
+                                    Request::extracted_device_from_uri(uri),
+                                );
+                            }
+
                             return Request {
                                 body: text,
                                 status: status,
@@ -48,11 +60,8 @@ impl Request {
 
         let response = Request::response_from_uri(&uri);
 
-        if response.body.to_lowercase() == "not connected" {
-            panic!(
-                "Device Not Connected: {}",
-                Request::extracted_device(request)
-            );
+        if Request::is_not_connected_response(&response.body) {
+            Request::device_not_connected_panic(Request::extracted_device(request));
         }
 
         response
@@ -71,7 +80,7 @@ impl Request {
             println!("Test: request status is {}", status)
         }
 
-        match status {
+        match status.to_lowercase().as_str() {
             "true" => return true,
             "led set" => return true,
             "triled set" => return true,
@@ -98,6 +107,14 @@ impl Request {
         }
     }
 
+    pub fn extracted_device_from_uri(uri: &str) -> char {
+        for device in uri.split('/').rev() {
+            if constant::VALID_DEVICES.contains(device) {
+                return device.chars().nth(0).unwrap();
+            }
+        }
+        constant::UNKNOWN_DEVICE
+    }
     pub fn extracted_device(request: &[&str]) -> char {
         for device in request.iter().rev() {
             if constant::VALID_DEVICES.contains(device) {
@@ -126,13 +143,25 @@ mod tests {
             uri,
             "http://127.0.0.1:30061/hummingbird/in/orientation/Shake/A"
         );
-
         let response_using_uri = Request::response_from_uri(&uri);
 
         assert_eq!(response_using_uri.status, 200);
         assert_eq!(response_using_uri.body, "false");
     }
 
+    #[test]
+    #[should_panic(expected = "Device Not Connected: C")]
+    fn test_response_using_uri_no_device() {
+        let uri = Request::request_uri_from_vector(&vec![
+            "hummingbird",
+            "in",
+            "orientation",
+            "Shake",
+            "C",
+        ]);
+
+        Request::response_from_uri(&uri);
+    }
     #[test]
     fn test_response() {
         let response = Request::response(&vec!["hummingbird", "in", "orientation", "Shake", "A"]);
@@ -253,5 +282,16 @@ mod tests {
                 "5"
             ]) == 'B'
         );
+    }
+
+    #[test]
+    fn test_extracted_device_from_uri() {
+        let uri = "http://127.0.0.1:30061/hummingbird/in/orientation/Shake/B";
+
+        assert!(Request::extracted_device_from_uri(&uri) == 'B');
+
+        let uri = "http://127.0.0.1:30061/hummingbird/out/symbol/C/false/true/false/true";
+
+        assert!(Request::extracted_device_from_uri(&uri) == 'C');
     }
 }

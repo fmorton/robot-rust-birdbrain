@@ -2,11 +2,6 @@ pub mod microbit {
     use crate::request::Request;
     use crate::state::State;
     pub fn microbit_is_shaking(state: &State) -> bool {
-        println!(
-            "DEBUG::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::"
-        );
-        println!("{}", state.device);
-        println!("{}", state.connected);
         let response = Request::response(&vec![
             "hummingbird",
             "in",
@@ -14,11 +9,6 @@ pub mod microbit {
             "Shake",
             &state.device.to_string(),
         ]);
-        println!(
-            "{}",
-            "show the actual body of the response................."
-        );
-        println!("{}", response.body);
 
         return response.body == "true";
     }
