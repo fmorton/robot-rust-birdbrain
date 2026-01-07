@@ -109,6 +109,9 @@ impl Request {
 
     pub fn extracted_device_from_uri(uri: &str) -> char {
         for device in uri.split('/').rev() {
+            if device.len() == 0 {
+                continue;
+            }
             if constant::VALID_DEVICES.contains(device) {
                 return device.chars().nth(0).unwrap();
             }
@@ -116,12 +119,7 @@ impl Request {
         constant::UNKNOWN_DEVICE
     }
     pub fn extracted_device(request: &[&str]) -> char {
-        for device in request.iter().rev() {
-            if constant::VALID_DEVICES.contains(device) {
-                return device.chars().nth(0).unwrap();
-            }
-        }
-        constant::UNKNOWN_DEVICE
+        Request::extracted_device_from_uri(&Request::request_uri_from_vector(request))
     }
 }
 
