@@ -3,6 +3,16 @@ name = "birdbrain"
 version = "0.1.0"
 edition = "2024"
 license = "MIT"
+description = "Rust Library for the BirdBrainTechnologies Hummingbird Bit and Finch 2"
+homepage = "https://github.com/fmorton/robot-rust-birdbrain"
+repository = "https://github.com/fmorton/robot-rust-birdbrain"
+rust-version = "1.92.0"
+
+[lib]
+name = "birdbrain"
+path = "src/lib.rs"
+test = "true"
+crate-type = ["lib"]
 
 [dependencies]
 reqwest = { version = "0.11", features = ["blocking"] }
