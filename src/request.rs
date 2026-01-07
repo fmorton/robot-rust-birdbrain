@@ -6,6 +6,18 @@ pub struct Request {
 }
 
 impl Request {
+    pub fn connected(device: char) -> bool {
+        let response = Request::response(&vec![
+            "hummingbird",
+            "in",
+            "orientation",
+            "Shake",
+            &device.to_string(),
+        ]);
+
+        return response.body == "false";
+    }
+
     fn error_response() -> Request {
         Request {
             body: "".to_string(),

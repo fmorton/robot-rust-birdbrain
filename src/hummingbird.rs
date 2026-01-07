@@ -1,5 +1,4 @@
 use crate::constant;
-use crate::device::connected;
 use crate::microbit::microbit::microbit_is_shaking;
 use crate::request::Request;
 use crate::state::State;
@@ -15,7 +14,7 @@ impl Hummingbird {
             state: State::new(device),
         };
 
-        hummingbird.state.connected = connected(&mut hummingbird.state);
+        hummingbird.state.connected = Request::connected(device);
 
         hummingbird
     }
