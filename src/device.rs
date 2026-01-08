@@ -1,13 +1,13 @@
 use crate::constant;
 
-pub struct Request {
+pub struct Device {
     pub body: String,
     pub status: u16,
 }
 
-impl Request {
+impl Device {
     pub fn connected(device: char) -> bool {
-        let response = Request::response(&vec![
+        let response = Device::response(&vec![
             "hummingbird",
             "in",
             "orientation",
@@ -18,8 +18,8 @@ impl Request {
         return response.body == "false";
     }
 
-    fn error_response() -> Request {
-        Request {
+    fn error_response() -> Device {
+        Device {
             body: "".to_string(),
             status: 500,
         }
@@ -35,7 +35,7 @@ impl Request {
         response
     }
 
-    fn response_from_uri(uri: &String) -> Request {
+    fn response_from_uri(uri: &String) -> Device {
         let response = reqwest::blocking::get(uri);
 
         match response {
@@ -44,21 +44,21 @@ impl Request {
                     let status = response.status().as_u16();
                     match response.text() {
                         Ok(text) => {
-                            if Request::is_not_connected_response(&text) {
-                                Request::device_not_connected_panic(
-                                    Request::extracted_device_from_uri(uri),
+                            if Device::is_not_connected_response(&text) {
+                                Device::device_not_connected_panic(
+                                    Device::extracted_device_from_uri(uri),
                                 );
                             }
 
-                            return Request {
+                            return Device {
                                 body: text,
                                 status: status,
                             };
                         }
-                        Err(e) => return Request::error_response(),
+                        Err(e) => return Device::error_response(),
                     }
                 } else {
-                    return Request::error_response();
+                    return Device::error_response();
                 }
             }
             Err(err) => {
@@ -67,20 +67,20 @@ impl Request {
         }
     }
 
-    pub fn response(request: &[&str]) -> Request {
-        let uri = Request::request_uri_from_vector(request).to_string();
+    pub fn response(request: &[&str]) -> Device {
+        let uri = Device::request_uri_from_vector(request).to_string();
 
-        let response = Request::response_from_uri(&uri);
+        let response = Device::response_from_uri(&uri);
 
-        if Request::is_not_connected_response(&response.body) {
-            Request::device_not_connected_panic(Request::extracted_device(request));
+        if Device::is_not_connected_response(&response.body) {
+            Device::device_not_connected_panic(Device::extracted_device(request));
         }
 
         response
     }
 
     pub fn response_status(request: &[&str]) -> bool {
-        return Request::request_status(&Request::response(request).body);
+        return Device::request_status(&Device::response(request).body);
     }
 
     pub fn is_not_connected_response(response: &str) -> bool {
@@ -131,7 +131,7 @@ impl Request {
         constant::UNKNOWN_DEVICE
     }
     pub fn extracted_device(request: &[&str]) -> char {
-        Request::extracted_device_from_uri(&Request::request_uri_from_vector(request))
+        Device::extracted_device_from_uri(&Device::request_uri_from_vector(request))
     }
 }
 
@@ -141,7 +141,7 @@ mod tests {
 
     #[test]
     fn test_response_using_uri() {
-        let uri = Request::request_uri_from_vector(&vec![
+        let uri = Device::request_uri_from_vector(&vec![
             "hummingbird",
             "in",
             "orientation",
@@ -153,7 +153,7 @@ mod tests {
             uri,
             "http://127.0.0.1:30061/hummingbird/in/orientation/Shake/A"
         );
-        let response_using_uri = Request::response_from_uri(&uri);
+        let response_using_uri = Device::response_from_uri(&uri);
 
         assert_eq!(response_using_uri.status, 200);
         assert_eq!(response_using_uri.body, "false");
@@ -162,7 +162,7 @@ mod tests {
     #[test]
     #[should_panic(expected = "Device Not Connected: C")]
     fn test_response_using_uri_no_device() {
-        let uri = Request::request_uri_from_vector(&vec![
+        let uri = Device::request_uri_from_vector(&vec![
             "hummingbird",
             "in",
             "orientation",
@@ -170,73 +170,73 @@ mod tests {
             "C",
         ]);
 
-        Request::response_from_uri(&uri);
+        Device::response_from_uri(&uri);
     }
     #[test]
     fn test_response() {
-        let response = Request::response(&vec!["hummingbird", "in", "orientation", "Shake", "A"]);
+        let response = Device::response(&vec!["hummingbird", "in", "orientation", "Shake", "A"]);
 
         assert_eq!(response.status, 200);
         assert_eq!(response.body, "false");
 
-        assert!(!Request::is_not_connected_response(&response.body));
+        assert!(!Device::is_not_connected_response(&response.body));
     }
 
     #[test]
     #[should_panic(expected = "Device Not Connected: C")]
     fn test_response_no_device() {
-        let response = Request::response(&vec!["hummingbird", "in", "orientation", "Shake", "C"]);
+        let response = Device::response(&vec!["hummingbird", "in", "orientation", "Shake", "C"]);
     }
 
     #[test]
     fn test_is_not_connected_response() {
-        assert!(Request::is_not_connected_response("Not Connected"));
-        assert!(Request::is_not_connected_response("Not connected"));
-        assert!(Request::is_not_connected_response("not connected"));
-        assert!(!Request::is_not_connected_response("Something Else"));
+        assert!(Device::is_not_connected_response("Not Connected"));
+        assert!(Device::is_not_connected_response("Not connected"));
+        assert!(Device::is_not_connected_response("not connected"));
+        assert!(!Device::is_not_connected_response("Something Else"));
     }
 
     #[test]
     fn test_request_status() {
-        assert!(Request::request_status("true"));
-        assert!(Request::request_status("true"));
-        assert!(Request::request_status("true"));
-        assert!(Request::request_status("led set"));
-        assert!(Request::request_status("triled set"));
-        assert!(Request::request_status("servo set"));
-        assert!(Request::request_status("buzzer set"));
-        assert!(Request::request_status("symbol set"));
-        assert!(Request::request_status("print set"));
-        assert!(Request::request_status("all stopped"));
+        assert!(Device::request_status("true"));
+        assert!(Device::request_status("true"));
+        assert!(Device::request_status("true"));
+        assert!(Device::request_status("led set"));
+        assert!(Device::request_status("triled set"));
+        assert!(Device::request_status("servo set"));
+        assert!(Device::request_status("buzzer set"));
+        assert!(Device::request_status("symbol set"));
+        assert!(Device::request_status("print set"));
+        assert!(Device::request_status("all stopped"));
 
-        assert!(Request::request_status("finch moved"));
-        assert!(Request::request_status("finch turned"));
-        assert!(Request::request_status("finch wheels started"));
-        assert!(Request::request_status("finch wheels stopped"));
-        assert!(Request::request_status("finch encoders reset"));
+        assert!(Device::request_status("finch moved"));
+        assert!(Device::request_status("finch turned"));
+        assert!(Device::request_status("finch wheels started"));
+        assert!(Device::request_status("finch wheels stopped"));
+        assert!(Device::request_status("finch encoders reset"));
 
-        assert!(!Request::request_status("false"));
-        assert!(!Request::request_status("not connected"));
-        assert!(!Request::request_status("invalid orientation"));
-        assert!(!Request::request_status("invalid port"));
+        assert!(!Device::request_status("false"));
+        assert!(!Device::request_status("not connected"));
+        assert!(!Device::request_status("invalid orientation"));
+        assert!(!Device::request_status("invalid port"));
     }
 
     #[test]
     #[should_panic(expected = "Unknown Status: ")]
     fn test_request_status_should_panic_empty() {
-        assert!(!Request::request_status(""));
+        assert!(!Device::request_status(""));
     }
 
     #[test]
     #[should_panic(expected = "Unknown Status: nonesense")]
     fn test_request_status_should_panic_nonsense() {
-        assert!(!Request::request_status("nonesense"));
+        assert!(!Device::request_status("nonesense"));
     }
 
     #[test]
     fn test_extracted_device() {
         assert!(
-            'A' == Request::extracted_device(&vec![
+            'A' == Device::extracted_device(&vec![
                 "hummingbird",
                 "in",
                 "orientation",
@@ -244,26 +244,24 @@ mod tests {
                 "A"
             ])
         );
-        assert!('A' == Request::extracted_device(&vec!["B", "in", "orientation", "Shake", "A"]));
-        assert!(
-            'C' == Request::extracted_device(&vec!["hummingbird", "C", "orientation", "Shake"])
-        );
+        assert!('A' == Device::extracted_device(&vec!["B", "in", "orientation", "Shake", "A"]));
+        assert!('C' == Device::extracted_device(&vec!["hummingbird", "C", "orientation", "Shake"]));
         assert!(
             constant::UNKNOWN_DEVICE
-                == Request::extracted_device(&vec!["hummingbird", "in", "orientation", "Shake"])
+                == Device::extracted_device(&vec!["hummingbird", "in", "orientation", "Shake"])
         );
 
         assert!(
-            Request::extracted_device(&vec!["hummingbird", "in", "orientation", "Shake", "A"])
+            Device::extracted_device(&vec!["hummingbird", "in", "orientation", "Shake", "A"])
                 == 'A'
         );
-        //assert!(Request::extracted_device(&vec![["hummingbird", "in", "orientation", "Shake", "A"]]) == 'A');
-        //assert!(Request::extracted_device(&vec![("hummingbird", "in", "orientation", "Shake", "A")]) == 'A');
-        //assert!(Request::extracted_device(&vec![[("hummingbird", "in", "orientation", "Shake", "A")]) == 'A');
-        //assert!(Request::extracted_device((&vec![["hummingbird", "in", "orientation", "Shake", "A"])) == 'A');
+        //assert!(Device::extracted_device(&vec![["hummingbird", "in", "orientation", "Shake", "A"]]) == 'A');
+        //assert!(Device::extracted_device(&vec![("hummingbird", "in", "orientation", "Shake", "A")]) == 'A');
+        //assert!(Device::extracted_device(&vec![[("hummingbird", "in", "orientation", "Shake", "A")]) == 'A');
+        //assert!(Device::extracted_device((&vec![["hummingbird", "in", "orientation", "Shake", "A"])) == 'A');
 
         assert!(
-            Request::extracted_device(&vec![
+            Device::extracted_device(&vec![
                 "hummingbird",
                 "out",
                 "symbol",
@@ -272,7 +270,7 @@ mod tests {
             ]) == 'C'
         );
         assert!(
-            Request::extracted_device(&vec![
+            Device::extracted_device(&vec![
                 "hummingbird",
                 "out",
                 "symbol",
@@ -282,7 +280,7 @@ mod tests {
         );
 
         assert!(
-            Request::extracted_device(&vec![
+            Device::extracted_device(&vec![
                 "hummingbird",
                 "out",
                 "move",
@@ -298,10 +296,10 @@ mod tests {
     fn test_extracted_device_from_uri() {
         let uri = "http://127.0.0.1:30061/hummingbird/in/orientation/Shake/B";
 
-        assert!(Request::extracted_device_from_uri(&uri) == 'B');
+        assert!(Device::extracted_device_from_uri(&uri) == 'B');
 
         let uri = "http://127.0.0.1:30061/hummingbird/out/symbol/C/false/true/false/true";
 
-        assert!(Request::extracted_device_from_uri(&uri) == 'C');
+        assert!(Device::extracted_device_from_uri(&uri) == 'C');
     }
 }

@@ -1,6 +1,6 @@
 use crate::constant;
+use crate::device::Device;
 use crate::microbit::microbit::microbit_is_shaking;
-use crate::request::Request;
 use crate::state::State;
 use crate::utility;
 
@@ -14,7 +14,7 @@ impl Hummingbird {
             state: State::new(device),
         };
 
-        hummingbird.state.connected = Request::connected(device);
+        hummingbird.state.connected = Device::connected(device);
 
         hummingbird
     }
@@ -29,7 +29,7 @@ impl Hummingbird {
         let calculated_intensity =
             utility::bounds(utility::calculate_intensity(intensity), 0, 255).to_string();
 
-        return Request::response_status(&vec![
+        return Device::response_status(&vec![
             "hummingbird",
             "out",
             "led",
@@ -37,6 +37,14 @@ impl Hummingbird {
             &calculated_intensity,
             &self.state.device.to_string(),
         ]);
+    }
+
+    /// Set tri_led of a certain port requested to valid intensities.
+    pub fn tri_led(&self, port: i32, r_intensity: f64, g_intensity: f64, b_intensity: f64) -> bool {
+        utility::validate_port(&port.to_string(), constant::VALID_TRI_LED_PORTS, false);
+
+        //Device::tri_led_response(&self.state.device.to_string(), port, r_intensity, g_intensity, b_intensity)
+        true
     }
 }
 

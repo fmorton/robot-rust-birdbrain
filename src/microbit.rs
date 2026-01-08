@@ -1,8 +1,8 @@
 pub mod microbit {
-    use crate::request::Request;
+    use crate::device::Device;
     use crate::state::State;
     pub fn microbit_is_shaking(state: &State) -> bool {
-        let response = Request::response(&vec![
+        let response = Device::response(&vec![
             "hummingbird",
             "in",
             "orientation",
