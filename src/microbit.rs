@@ -1,6 +1,7 @@
 pub mod microbit {
     use crate::device::Device;
     use crate::state::State;
+
     pub fn microbit_is_shaking(state: &State) -> bool {
         let response = Device::response(&vec![
             "hummingbird",
