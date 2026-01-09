@@ -173,6 +173,19 @@ mod tests {
         Device::response_from_uri(&uri);
     }
     #[test]
+    #[should_panic(expected = "Device Not Connected: ?")]
+    fn test_response_using_uri_invalid_device() {
+        let uri = Device::request_uri_from_vector(&vec![
+            "hummingbird",
+            "in",
+            "orientation",
+            "Shake",
+            "Z",
+        ]);
+
+        Device::response_from_uri(&uri);
+    }
+    #[test]
     fn test_response() {
         let response = Device::response(&vec!["hummingbird", "in", "orientation", "Shake", "A"]);
 

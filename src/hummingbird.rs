@@ -1,6 +1,6 @@
 use crate::constant;
 use crate::device::Device;
-use crate::microbit::microbit::microbit_is_shaking;
+use crate::microbit::microbit;
 use crate::request::request;
 use crate::state::State;
 use crate::utility;
@@ -21,7 +21,7 @@ impl Hummingbird {
     }
 
     pub fn is_shaking(&self) -> bool {
-        microbit_is_shaking(&self.state)
+        microbit::microbit_is_shaking(&self.state)
     }
 
     pub fn led(&self, port: i32, intensity: i32) -> bool {
@@ -102,10 +102,10 @@ mod tests {
     }
 
     #[test]
-    #[should_panic(expected = "Invalid Port: 6")]
+    #[should_panic(expected = "Invalid Port: 7")]
     fn test_hummingbird_tri_led_invalid_port() {
         let hummingbird = Hummingbird::new('A');
 
-        assert!(hummingbird.tri_led(6, 30, 30, 30));
+        assert!(hummingbird.tri_led(7, 30, 30, 30));
     }
 }
