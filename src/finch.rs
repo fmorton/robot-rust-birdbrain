@@ -1,4 +1,5 @@
 use crate::state::State;
+use crate::utility;
 
 pub struct Finch {
     state: State,
@@ -11,5 +12,9 @@ impl Finch {
         };
 
         finch
+    }
+
+    pub fn sleep(&self, milliseconds: u64) {
+        utility::sleep(milliseconds);
     }
 }

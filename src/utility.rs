@@ -1,5 +1,8 @@
 use crate::constant;
 
+pub fn sleep(milliseconds: u64) {
+    std::thread::sleep(std::time::Duration::from_millis(milliseconds));
+}
 pub fn validate(validate: &str, validate_range: &str, validate_message: &str) -> bool {
     if !validate_range
         .to_lowercase()
@@ -189,4 +192,9 @@ fn test_calculate_left_or_right() {
     assert_eq!(calculate_left_or_right("L"), "Left");
     assert_eq!(calculate_left_or_right("R"), "Right");
     assert_eq!(calculate_left_or_right("BAD"), "None");
+}
+
+#[test]
+fn test_sleep() {
+    self::sleep(10);
 }
