@@ -72,6 +72,23 @@ impl Hummingbird {
             &self.state.device.to_string(),
         ])
     }
+
+    /// Set Rotation servo of a certain port requested to a valid speed.
+    pub fn rotation_servo(&self, port: i32, speed: i32) -> bool {
+        utility::validate_port(&port.to_string(), constant::VALID_SERVO_PORTS, false);
+
+        let calculated_speed =
+            utility::calculate_speed(utility::bounds(speed, -100, 100)).to_string();
+
+        Device::response_status(&vec![
+            "hummingbird",
+            "out",
+            "rotation",
+            &port.to_string(),
+            &calculated_speed,
+            &self.state.device.to_string(),
+        ])
+    }
 }
 
 #[cfg(test)]
@@ -145,5 +162,16 @@ mod tests {
         hummingbird.sleep(150);
 
         assert!(hummingbird.position_servo(1, 130));
+    }
+
+    #[test]
+    fn test_hummingbird_rotation_servo() {
+        let hummingbird = Hummingbird::new('A');
+
+        assert!(hummingbird.rotation_servo(2, 75));
+
+        hummingbird.sleep(150);
+
+        assert!(hummingbird.rotation_servo(2, 0));
     }
 }
